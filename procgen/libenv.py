@@ -427,6 +427,15 @@ class CVecEnv:
             self._maybe_copy_ndarray(self._dones),
             infos,
         )
+    def remove_level(self, index):
+        self._c_env.libenv_remove_level(self._c_env,index)
+    def add_level(self, level_id, actions):
+        num_moves=len(action)
+        cmoves=self._ffi.new("int["+str(num_moves)+"]")
+        if num_moves>0:
+            for i in range(num_moves):
+                cmoves[i]=moves[i]
+        return self._c_lib.libenv_add_level(self._c_env,level_id,num_moves,cmoves)
 
     def step(
         self, actions: np.ndarray

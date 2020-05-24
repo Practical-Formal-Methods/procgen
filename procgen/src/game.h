@@ -15,7 +15,7 @@ Base class used for all games, all games must inherit from this
 #include "resources.h"
 #include "object-ids.h"
 #include "game-registry.h"
-
+#include "reset-guard.h"
 // We want all games to have same observation space. So all these
 // constants here related to observation space are constants forever.
 const int RES_W = 64;
@@ -47,7 +47,7 @@ struct GameOptions {
     int debug_mode = 0;
     DistributionMode distribution_mode = HardMode;
     bool use_sequential_levels = false;
-
+    bool use_level_guard = false;
     // coinrun_old
     bool use_easy_jump = false;
     int plain_assets = 0;
@@ -57,7 +57,7 @@ struct GameOptions {
 class Game {
   public:
     GameOptions options;
-
+    bool use_level_guard = false;
     bool grid_step = false;
     int level_seed_low = 0;
     int level_seed_high = 1;
@@ -95,7 +95,8 @@ class Game {
     std::vector<void *> info_bufs;
     float *reward_ptr = nullptr;
     uint8_t *done_ptr = nullptr;
-
+    
+    LevelGuard* LevelGuard=NULL;
     Game();
     void step();
     void reset();

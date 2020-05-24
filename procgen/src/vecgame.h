@@ -23,7 +23,7 @@ class VecGame {
     std::vector<struct libenv_space> action_spaces;
     std::vector<struct libenv_space> render_spaces;
     std::vector<struct libenv_space> info_spaces;
-
+    LevelGuard levelGuard;
     int num_envs;
     int num_joint_games;
     int num_actions;

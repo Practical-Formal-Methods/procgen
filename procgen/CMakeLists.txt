@@ -73,6 +73,7 @@ add_library(env
   src/resources.cpp
   src/vecgame.cpp
   src/vecoptions.cpp
+  src/reset-guard.cpp
 )
 
 target_link_libraries(env Qt5::Gui)

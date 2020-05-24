@@ -87,13 +87,18 @@ void Game::render_to_buf(void *dst, int w, int h, bool antialias) {
 
 void Game::reset() {
     reset_count++;
-
+    struct Level newLevel;
     if (episodes_remaining == 0) {
         if (options.use_sequential_levels && step_data.level_complete) {
             // prevent overflow in seed sequences
             current_level_seed = (int32_t)(current_level_seed + 997);
         } else {
-            current_level_seed = level_seed_rand_gen.randint(level_seed_low, level_seed_high);
+            if(use_level_guard){
+                newLevel=LevelGuard->nextLevel();
+                current_level_seed=level.level_id;
+            }
+            else
+                current_level_seed = level_seed_rand_gen.randint(level_seed_low, level_seed_high);
         }
 
         episodes_remaining = 1;
@@ -105,7 +110,15 @@ void Game::reset() {
 
     rand_gen.seed(current_level_seed);
     game_reset();
-
+    if(use_level_guard && newLevel.step_count>0){
+        StepData old;
+        old=step_data;
+        for(int i=0;i<newLevel.step_count;i++){
+            action=newLevel.steps[i];
+            game_step();
+        }
+        step_data=old;
+    }
     cur_time = 0;
     total_reward = 0;
     episodes_remaining -= 1;

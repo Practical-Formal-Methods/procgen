@@ -106,7 +106,15 @@ void libenv_close(libenv_venv *env) {
     delete venv;
 }
 }
-
+int libenv_add_level(libenv_venv *env, int level_id, int num_moves, void *moves){
+    auto venv= (VecGame *)(env);
+    int ret=venv->levelGuard.addLevel(level_id,num_moves,(int *)moves);
+    return ret;
+}
+void libenv_remove_level(libenv_venv *env, int index){
+    auto venv= (VecGame *)(env);
+    venv->levelGuard.removeLevel(index);
+}
 // end libenv api
 
 static void stepping_worker(std::mutex& stepping_thread_mutex, 
@@ -171,7 +179,7 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
     num_envs = _nenvs;
     games.resize(num_envs);
     std::string env_name;
-
+    bool use_level_guard=false;
     int num_levels = 0;
     int start_level = -1;
     num_actions = -1;
@@ -187,10 +195,12 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
     opts.consume_int("rand_seed", &rand_seed);
     opts.consume_int("num_threads", &num_threads);
     opts.consume_string("resource_root", &resource_root);
-
+    opts.consume_bool("use_level_guard",&use_level_guard);
     std::call_once(global_init_flag, global_init, rand_seed,
                    resource_root);
 
+    if(use_level_guard)
+        LevelGuard=LevelGuard(start_level,num_levels);
     fassert(num_threads >= 0);
     threads.resize(num_threads);
     for (int t = 0; t < num_threads; t++) {
@@ -238,7 +248,10 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
         games[n]->game_n = n;
         games[n]->is_waiting_for_step = false;
         games[n]->parse_options(name, opts);
-
+        if(levelGuard.active){
+            games[n]->use_level_guard=true;
+            games[n]->LevelGuard=&levelGuard;
+        }
         // Auto-selected a fixed_asset_seed if one wasn't specified on
         // construction
         if (games[n]->fixed_asset_seed == 0) {

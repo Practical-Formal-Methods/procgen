@@ -190,6 +190,9 @@ LIBENV_API bool libenv_render(libenv_venv *handle, const char *mode, void **fram
 // libenv_close closes the environment and frees any resources associated with it
 LIBENV_API void libenv_close(libenv_venv *handle);
 
+// custom functions for handling states
+LIBENV_API int libenv_add_level(libenv_venv *handle, int level_id, int num_moves, void *moves);
+LIBENV_API void libenv_remove_level(libenv_venv *handle, int index);
 #endif
 
 // END_CDEF

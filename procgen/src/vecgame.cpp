@@ -255,7 +255,7 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
         games[n]->game_n = n;
         games[n]->is_waiting_for_step = false;
         games[n]->parse_options(name, opts);
-        if(levelGuard->active){
+        if(use_level_guard){
             games[n]->use_level_guard=true;
             games[n]->levelGuard=levelGuard;
         }

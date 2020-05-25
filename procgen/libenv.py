@@ -100,6 +100,9 @@ class CVecEnv:
         # it may be useful to keep a reference to an environment (and thus the c_lib object)
         # to avoid this happening
 
+        if options["num_levels"]==0 and "use_level_guard" in options and options["use_level_guard"]==True:
+            print("Cannot use level guard with all levels active")
+            options["use_level_guard"]=False
         self._options = options
         self._state = STATE_NEEDS_RESET
 

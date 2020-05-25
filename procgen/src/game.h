@@ -96,7 +96,7 @@ class Game {
     float *reward_ptr = nullptr;
     uint8_t *done_ptr = nullptr;
     
-    LevelGuard* LevelGuard=NULL;
+    LevelGuard* levelGuard;
     Game();
     void step();
     void reset();

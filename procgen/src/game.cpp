@@ -94,8 +94,8 @@ void Game::reset() {
             current_level_seed = (int32_t)(current_level_seed + 997);
         } else {
             if(use_level_guard){
-                newLevel=LevelGuard->nextLevel();
-                current_level_seed=level.level_id;
+                newLevel=levelGuard->nextLevel();
+                current_level_seed=newLevel.level_id;
             }
             else
                 current_level_seed = level_seed_rand_gen.randint(level_seed_low, level_seed_high);

@@ -1,3 +1,4 @@
+#pragma once
 #include<vector>
 #include<iostream>
 #include "randgen.h"
@@ -13,14 +14,15 @@ enum modes{
     Sequential=2
 };
 class LevelGuard{
-    std::vector<struct Level> Levels;
     bool verbose;
     modes Mode;
     RandGen randgen;
     int getIndex(float weight);
+    std::vector<struct Level> Levels;
     public:
         LevelGuard();
-        LevelGuard(int startLevel, int numLevels, bool setVerbose, int mode);
+        void init(int startLevel, int numLevels, int randseed,bool setVerbose, int mode);
+        void init(int startLevel, int numLevels, int randseed){init(startLevel,numLevels,randseed,false,modes::Random);};
         float netWeight();
         void removeLevel(int index);
         int addLevel(int level_id, int len_moves, int* moves);

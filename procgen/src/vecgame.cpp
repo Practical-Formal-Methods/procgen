@@ -108,12 +108,17 @@ void libenv_close(libenv_venv *env) {
 }
 int libenv_add_level(libenv_venv *env, int level_id, int num_moves, void *moves){
     auto venv= (VecGame *)(env);
-    int ret=venv->levelGuard.addLevel(level_id,num_moves,(int *)moves);
+    int ret=venv->levelGuard->addLevel(level_id,num_moves,(int *)moves);
     return ret;
 }
 void libenv_remove_level(libenv_venv *env, int index){
     auto venv= (VecGame *)(env);
-    venv->levelGuard.removeLevel(index);
+    venv->levelGuard->removeLevel(index);
+}
+int libenv_get_level(libenv_venv *env, int index){
+    auto venv= (VecGame *)(env);
+    if(index>=venv->games.size()) return -1;
+    return venv->games[index]->current_level_seed;
 }
 // end libenv api
 
@@ -199,8 +204,10 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
     std::call_once(global_init_flag, global_init, rand_seed,
                    resource_root);
 
-    if(use_level_guard)
-        LevelGuard=LevelGuard(start_level,num_levels);
+    if(use_level_guard){
+        levelGuard=new LevelGuard();
+        levelGuard->init(start_level,num_levels,rand_seed,false,modes::Random);
+    }
     fassert(num_threads >= 0);
     threads.resize(num_threads);
     for (int t = 0; t < num_threads; t++) {
@@ -240,7 +247,6 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
 
     for (int n = 0; n < num_envs; n++) {
         auto name = env_names[n % num_joint_games];
-
         games[n] = globalGameRegistry->at(name)();
         games[n]->level_seed_rand_gen.seed(game_level_seed_gen.randint());
         games[n]->level_seed_high = level_seed_high;
@@ -248,9 +254,9 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
         games[n]->game_n = n;
         games[n]->is_waiting_for_step = false;
         games[n]->parse_options(name, opts);
-        if(levelGuard.active){
+        if(levelGuard->active){
             games[n]->use_level_guard=true;
-            games[n]->LevelGuard=&levelGuard;
+            games[n]->levelGuard=levelGuard;
         }
         // Auto-selected a fixed_asset_seed if one wasn't specified on
         // construction

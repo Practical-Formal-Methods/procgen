@@ -11,7 +11,7 @@ There is no error if an option is missing, the passed value is not changed in th
 #include "libenv.h"
 #include <string>
 #include <vector>
-
+#include <iostream>
 class VecOptions {
   public:
     VecOptions(const struct libenv_options options);

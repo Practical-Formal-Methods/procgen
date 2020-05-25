@@ -105,3 +105,4 @@ venv.bak/
 
 .envrc
 .build/
+.vscode/

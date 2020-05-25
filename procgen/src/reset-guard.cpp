@@ -8,16 +8,20 @@ struct Level createLevel(int level_id){
     return newLevel;
 }
 
-LevelGuard::LevelGuard(int startLevel, int numLevels, bool setVerbose=false, int mode=modes::Random){
+void LevelGuard::init(int startLevel, int numLevels, int randseed, bool setVerbose=false, int mode=modes::Random){
     for(int i=startLevel;i<startLevel+numLevels;i++){
         Levels.push_back(createLevel(i));
+        if(setVerbose)
+            std::cout<<"Added level "<<i<<" now have "<<Levels.size()<<" levels\n";
     }
     verbose=setVerbose;
     Mode=(modes)mode;
     active=true;
+    randgen.seed(randseed);
 }
 LevelGuard::LevelGuard(){
     active=false;
+    //std::cout<<"I got called too\n";
 }
 float LevelGuard::netWeight(){
     float sum=0;
@@ -53,7 +57,7 @@ int LevelGuard::getIndex(float weight){
     for(;sum<weight;++i){
         sum+=Levels[i].weight;
     }
-    return i;
+    return i-1;
 }
 struct Level LevelGuard::nextLevel(){
     float seed=randgen.randrange(0,netWeight());

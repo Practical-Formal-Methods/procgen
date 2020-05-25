@@ -117,7 +117,8 @@ void libenv_remove_level(libenv_venv *env, int index){
 }
 int libenv_get_level(libenv_venv *env, int index){
     auto venv= (VecGame *)(env);
-    if(index>=venv->games.size()) return -1;
+    int gsize = (int) venv->games.size();
+    if(index>=gsize) return -1;
     return venv->games[index]->current_level_seed;
 }
 // end libenv api

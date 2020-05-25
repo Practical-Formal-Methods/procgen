@@ -31,10 +31,11 @@ float LevelGuard::netWeight(){
     return sum;
 }
 void LevelGuard::removeLevel(int index){
-    if(Levels.size()<=index){
+    int lsize = (int) Levels.size();
+    if(lsize<=index){
         if(verbose)
             std::cout<<"Index "<<index<<" out of range for vector with "<<Levels.size()<<"elements. Skipping."<<std::endl;
-            return;
+        return;
     }
     if(verbose)
         std::cout<<"Setting weight for index "<<index<<"(level#"<<Levels[index].level_id<<") to zero. Previously this was "<<Levels[index].weight<<std::endl;

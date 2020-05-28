@@ -191,7 +191,7 @@ LIBENV_API bool libenv_render(libenv_venv *handle, const char *mode, void **fram
 LIBENV_API void libenv_close(libenv_venv *handle);
 
 // custom functions for handling states
-LIBENV_API int libenv_add_level(libenv_venv *handle, int level_id, int num_moves, void *moves);
+LIBENV_API int libenv_add_level(libenv_venv *handle, int level_id, int num_moves, void *moves, float weight);
 LIBENV_API void libenv_remove_level(libenv_venv *handle, int index);
 LIBENV_API int libenv_get_level(libenv_venv *handle, int index);
 #endif

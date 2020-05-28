@@ -25,7 +25,7 @@ class LevelGuard{
         void init(int startLevel, int numLevels, int randseed){init(startLevel,numLevels,randseed,false,modes::Random);};
         float netWeight();
         void removeLevel(int index);
-        int addLevel(int level_id, int len_moves, int* moves);
+        int addLevel(int level_id, int len_moves, int* moves, float weight);
         struct Level nextLevel();
         bool active=false;
 };

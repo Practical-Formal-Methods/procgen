@@ -41,7 +41,7 @@ void LevelGuard::removeLevel(int index){
         std::cout<<"Setting weight for index "<<index<<"(level#"<<Levels[index].level_id<<") to zero. Previously this was "<<Levels[index].weight<<std::endl;
     Levels[index].weight=0;
 }
-int LevelGuard::addLevel(int level_id, int len_moves, int* moves){
+int LevelGuard::addLevel(int level_id, int len_moves, int* moves, float weight){
     Level newLevel=createLevel(level_id);
     newLevel.step_count=len_moves;
     if(len_moves>0){
@@ -49,6 +49,7 @@ int LevelGuard::addLevel(int level_id, int len_moves, int* moves){
             newLevel.steps.push_back(moves[i]);
     }
     int id=Levels.size();
+    newLevel.weight=weight;
     Levels.push_back(newLevel);
     return id;
 }

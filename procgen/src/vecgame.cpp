@@ -106,9 +106,9 @@ void libenv_close(libenv_venv *env) {
     delete venv;
 }
 }
-int libenv_add_level(libenv_venv *env, int level_id, int num_moves, void *moves){
+int libenv_add_level(libenv_venv *env, int level_id, int num_moves, void *moves, float weight=1.0){
     auto venv= (VecGame *)(env);
-    int ret=venv->levelGuard->addLevel(level_id,num_moves,(int *)moves);
+    int ret=venv->levelGuard->addLevel(level_id,num_moves,(int *)moves, weight);
     return ret;
 }
 void libenv_remove_level(libenv_venv *env, int index){
